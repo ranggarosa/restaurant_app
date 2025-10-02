@@ -1,38 +1,32 @@
 import 'package:flutter/foundation.dart';
 import '../data/api/api_service.dart';
 import '../data/models/restaurant_detail.dart';
-import '../common/state_enum.dart';
+import '../common/api_state.dart';
 
 class RestaurantDetailProvider extends ChangeNotifier {
   final ApiService apiService;
   final String restaurantId;
 
-  RestaurantDetailProvider({required this.apiService, required this.restaurantId}) {
-    _fetchDetail(restaurantId);
+  RestaurantDetailProvider({
+    required this.apiService,
+    required this.restaurantId,
+  }) {
+    fetchDetail(restaurantId);
   }
 
-  late RestaurantDetail _restaurantDetail;
-  late ResultState _state;
-  String _message = '';
+  late ApiState<RestaurantDetail> _state;
 
-  RestaurantDetail get result => _restaurantDetail;
-  ResultState get state => _state;
-  String get message => _message;
+  ApiState<RestaurantDetail> get state => _state;
 
-  Future<void> _fetchDetail(String id) async {
+  Future<void> fetchDetail(String id) async {
+    _state = const ApiLoading();
+    notifyListeners();
     try {
-      _state = ResultState.loading;
-      notifyListeners();
-
       final result = await apiService.getRestaurantDetail(id);
-      _state = ResultState.hasData;
-      _restaurantDetail = result;
-
+      _state = ApiSuccess(result);
     } catch (e) {
-      _state = ResultState.error;
-      _message = 'Error --> $e';
-    } finally {
-      notifyListeners();
+      _state = ApiError('Error --> $e');
     }
+    notifyListeners();
   }
 }

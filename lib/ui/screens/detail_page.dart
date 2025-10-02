@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../common/state_enum.dart';
+import '../../common/api_state.dart';
 import '../../data/api/api_service.dart';
 import '../../data/models/restaurant_detail.dart';
 import '../../providers/restaurant_detail_provider.dart';
@@ -10,7 +10,8 @@ class DetailPage extends StatelessWidget {
 
   const DetailPage({Key? key, required this.restaurantId}) : super(key: key);
 
-  static const String _imageUrl = 'https://restaurant-api.dicoding.dev/images/medium/';
+  static const String _imageUrl =
+      'https://restaurant-api.dicoding.dev/images/medium/';
 
   @override
   Widget build(BuildContext context) {
@@ -20,26 +21,25 @@ class DetailPage extends StatelessWidget {
         restaurantId: restaurantId,
       ),
       child: Scaffold(
+        appBar: AppBar(title: const Text('Detail Restoran')),
         body: Consumer<RestaurantDetailProvider>(
           builder: (context, provider, _) {
-            switch (provider.state) {
-              case ResultState.loading:
-                return const Center(child: CircularProgressIndicator());
-              case ResultState.hasData:
-                final restaurant = provider.result;
-                return _buildDetailContent(context, restaurant);
-              case ResultState.error:
-                return Center(child: Text(provider.message));
-              default:
-                return const Center(child: Text('Terjadi kesalahan'));
-            }
+            final state = provider.state;
+            return switch (state) {
+              ApiLoading() => const Center(child: CircularProgressIndicator()),
+              ApiError(:final message) => Center(child: Text(message)),
+              ApiSuccess(:final data) => _buildDetailContent(context, data),
+            };
           },
         ),
       ),
     );
   }
 
-  Widget _buildDetailContent(BuildContext context, RestaurantDetail restaurant) {
+  Widget _buildDetailContent(
+    BuildContext context,
+    RestaurantDetail restaurant,
+  ) {
     return SingleChildScrollView(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -98,14 +98,15 @@ class DetailPage extends StatelessWidget {
     );
   }
 
-  Widget _buildMenuSection(BuildContext context, String title, List<MenuItem> items) {
+  Widget _buildMenuSection(
+    BuildContext context,
+    String title,
+    List<MenuItem> items,
+  ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          title,
-          style: Theme.of(context).textTheme.titleLarge,
-        ),
+        Text(title, style: Theme.of(context).textTheme.titleLarge),
         const SizedBox(height: 8),
         Wrap(
           spacing: 8.0,
@@ -113,12 +114,16 @@ class DetailPage extends StatelessWidget {
           children: items.map((item) {
             return Chip(
               avatar: Icon(
-                title == 'Makanan' ? Icons.fastfood_outlined : Icons.local_cafe_outlined,
+                title == 'Makanan'
+                    ? Icons.fastfood_outlined
+                    : Icons.local_cafe_outlined,
                 color: Theme.of(context).colorScheme.onPrimary,
               ),
               label: Text(item.name),
               backgroundColor: Theme.of(context).colorScheme.primary,
-              labelStyle: TextStyle(color: Theme.of(context).colorScheme.onPrimary),
+              labelStyle: TextStyle(
+                color: Theme.of(context).colorScheme.onPrimary,
+              ),
             );
           }).toList(),
         ),

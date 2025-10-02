@@ -9,7 +9,9 @@ class ApiService {
   Future<List<Restaurant>> getRestaurantList() async {
     final response = await http.get(Uri.parse("$_baseUrl/list"));
     if (response.statusCode == 200) {
-      final List<dynamic> restaurantsJson = json.decode(response.body)['restaurants'];
+      final List<dynamic> restaurantsJson = json.decode(
+        response.body,
+      )['restaurants'];
       return restaurantsJson.map((json) => Restaurant.fromJson(json)).toList();
     } else {
       throw Exception('Gagal memuat daftar restoran');

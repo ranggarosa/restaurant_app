@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'providers/theme_provider.dart';
+import 'providers/view_mode_provider.dart';
 import 'data/api/api_service.dart';
 import 'providers/restaurant_list_provider.dart';
 import 'ui/screens/home_page.dart';
@@ -19,13 +21,19 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(
           create: (_) => RestaurantListProvider(apiService: ApiService()),
         ),
+        ChangeNotifierProvider(create: (_) => ThemeProvider()),
+        ChangeNotifierProvider(create: (_) => ViewModeProvider()),
       ],
-      child: MaterialApp(
-        title: 'Restoran App',
-        theme: lightTheme,
-        darkTheme: darkTheme,
-        themeMode: ThemeMode.system,
-        home: const HomePage(),
+      child: Consumer<ThemeProvider>(
+        builder: (context, provider, child) {
+          return MaterialApp(
+            title: 'Restoran App',
+            theme: lightTheme,
+            darkTheme: darkTheme,
+            themeMode: provider.themeMode,
+            home: const HomePage(),
+          );
+        },
       ),
     );
   }

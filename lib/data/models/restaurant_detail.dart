@@ -41,8 +41,12 @@ class Menus {
 
   factory Menus.fromJson(Map<String, dynamic> json) {
     return Menus(
-      foods: List<MenuItem>.from(json['foods'].map((x) => MenuItem.fromJson(x))),
-      drinks: List<MenuItem>.from(json['drinks'].map((x) => MenuItem.fromJson(x))),
+      foods: List<MenuItem>.from(
+        json['foods'].map((x) => MenuItem.fromJson(x)),
+      ),
+      drinks: List<MenuItem>.from(
+        json['drinks'].map((x) => MenuItem.fromJson(x)),
+      ),
     );
   }
 }

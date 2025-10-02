@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:restaurant_app/data/api/api_service.dart';
 import 'package:restaurant_app/data/models/restaurant.dart';
-import 'package:restaurant_app/common/state_enum.dart';
+import 'package:restaurant_app/common/api_state.dart';
 
 class RestaurantListProvider extends ChangeNotifier {
   final ApiService apiService;
@@ -10,32 +10,23 @@ class RestaurantListProvider extends ChangeNotifier {
     fetchAllRestaurants();
   }
 
-  late List<Restaurant> _restaurants;
-  late ResultState _state;
-  String _message = '';
+  late ApiState<List<Restaurant>> _state;
 
-  List<Restaurant> get restaurants => _restaurants;
-  ResultState get state => _state;
-  String get message => _message;
+  ApiState<List<Restaurant>> get state => _state;
 
   Future<void> fetchAllRestaurants() async {
+    _state = const ApiLoading();
+    notifyListeners();
     try {
-      _state = ResultState.loading;
-      notifyListeners();
-
       final result = await apiService.getRestaurantList();
       if (result.isEmpty) {
-        _state = ResultState.noData;
-        _message = 'Data restoran kosong';
+        _state = const ApiSuccess([]);
       } else {
-        _state = ResultState.hasData;
-        _restaurants = result;
+        _state = ApiSuccess(result);
       }
     } catch (e) {
-      _state = ResultState.error;
-      _message = 'Error --> $e';
-    } finally {
-      notifyListeners();
+      _state = ApiError('Error --> $e');
     }
+    notifyListeners();
   }
 }

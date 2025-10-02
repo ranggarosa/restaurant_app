@@ -18,10 +18,7 @@ final ThemeData lightTheme = ThemeData(
     onPrimary: Colors.white,
     onSecondary: Colors.black,
   ),
-  appBarTheme: const AppBarTheme(
-    elevation: 0,
-    backgroundColor: darkGreen,
-  ),
+  appBarTheme: const AppBarTheme(elevation: 0, backgroundColor: darkGreen),
   elevatedButtonTheme: ElevatedButtonThemeData(
     style: ElevatedButton.styleFrom(
       backgroundColor: darkGreen,
@@ -42,10 +39,7 @@ final ThemeData darkTheme = ThemeData(
     onPrimary: Colors.black,
     onSecondary: Colors.white,
   ),
-  appBarTheme: AppBarTheme(
-    elevation: 0,
-    backgroundColor: Colors.grey[850],
-  ),
+  appBarTheme: AppBarTheme(elevation: 0, backgroundColor: Colors.grey[850]),
   elevatedButtonTheme: ElevatedButtonThemeData(
     style: ElevatedButton.styleFrom(
       backgroundColor: beige,
