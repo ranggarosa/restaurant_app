@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../../l10n/app_localizations.dart';
 import '../../providers/restaurant_list_provider.dart';
 import '../../providers/theme_provider.dart';
 import '../widgets/restaurant_card.dart';
@@ -8,6 +9,20 @@ import '../../common/api_state.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({Key? key}) : super(key: key);
+
+  String _getTranslatedErrorMessage(BuildContext context, String key) {
+    final localizations = AppLocalizations.of(context)!;
+    switch (key) {
+      case 'errorNotFound':
+        return localizations.errorNotFound;
+      case 'errorInternalServer':
+        return localizations.errorInternalServer;
+      case 'errorNoInternet':
+        return localizations.errorNoInternet;
+      default:
+        return localizations.errorGeneral;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +61,9 @@ class HomePage extends StatelessWidget {
           final state = provider.state;
           return switch (state) {
             ApiLoading() => const Center(child: CircularProgressIndicator()),
-            ApiError(:final message) => Center(child: Text(message)),
+            ApiError(:final message) => Center(
+              child: Text(_getTranslatedErrorMessage(context, message)),
+            ),
             ApiSuccess(:final data) =>
               data.isEmpty
                   ? const Center(child: Text('Tidak ada data restoran'))

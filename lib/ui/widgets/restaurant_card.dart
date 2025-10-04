@@ -132,6 +132,19 @@ class RestaurantCard extends StatelessWidget {
                 const SizedBox(height: 4),
                 Row(
                   children: [
+                    const Icon(Icons.location_city_outlined, size: 14),
+                    const SizedBox(width: 4),
+                    Expanded(
+                      child: Text(
+                        restaurant.city,
+                        style: Theme.of(context).textTheme.bodySmall,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                  ],
+                ),
+                Row(
+                  children: [
                     const Icon(Icons.star, color: Colors.amber, size: 14),
                     const SizedBox(width: 4),
                     Text(

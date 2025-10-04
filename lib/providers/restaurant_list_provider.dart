@@ -1,7 +1,10 @@
+import 'dart:io';
 import 'package:flutter/foundation.dart';
-import 'package:restaurant_app/data/api/api_service.dart';
-import 'package:restaurant_app/data/models/restaurant.dart';
-import 'package:restaurant_app/common/api_state.dart';
+import 'package:http/http.dart';
+import '../data/api/api_exception.dart';
+import '../data/api/api_service.dart';
+import '../data/models/restaurant.dart';
+import '../common/api_state.dart';
 
 class RestaurantListProvider extends ChangeNotifier {
   final ApiService apiService;
@@ -19,13 +22,15 @@ class RestaurantListProvider extends ChangeNotifier {
     notifyListeners();
     try {
       final result = await apiService.getRestaurantList();
-      if (result.isEmpty) {
-        _state = const ApiSuccess([]);
-      } else {
-        _state = ApiSuccess(result);
-      }
+      _state = result.isEmpty ? const ApiSuccess([]) : ApiSuccess(result);
+    } on SocketException {
+      _state = const ApiError('errorNoInternet');
+    } on ClientException {
+      _state = const ApiError('errorNoInternet');
+    } on ApiException catch (e) {
+      _state = ApiError(e.messageKey);
     } catch (e) {
-      _state = ApiError('Error --> $e');
+      _state = const ApiError('errorGeneral');
     }
     notifyListeners();
   }

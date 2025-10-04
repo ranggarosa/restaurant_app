@@ -1,0 +1,7 @@
+{
+  "@@locale": "en",
+  "errorGeneral": "Failed to load data. Please try again later.",
+  "errorNotFound": "The requested resource could not be found (Error 404).",
+  "errorInternalServer": "There was a problem with the server. Please try again later (Error 500).",
+  "errorNoInternet": "No internet connection. Please check your connection and try again."
+}

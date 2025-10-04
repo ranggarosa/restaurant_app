@@ -1,0 +1,7 @@
+{
+  "@@locale": "id",
+  "errorGeneral": "Gagal memuat data. Silakan coba lagi nanti.",
+  "errorNotFound": "Sumber daya yang diminta tidak dapat ditemukan (Error 404).",
+  "errorInternalServer": "Terjadi masalah pada server. Silakan coba lagi nanti (Error 500).",
+  "errorNoInternet": "Tidak ada koneksi internet. Silakan periksa koneksi Anda dan coba lagi."
+}

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../../l10n/app_localizations.dart';
 import '../../common/api_state.dart';
 import '../../data/api/api_service.dart';
 import '../../data/models/restaurant_detail.dart';
@@ -12,6 +13,20 @@ class DetailPage extends StatelessWidget {
 
   static const String _imageUrl =
       'https://restaurant-api.dicoding.dev/images/medium/';
+
+  String _getTranslatedErrorMessage(BuildContext context, String key) {
+    final localizations = AppLocalizations.of(context)!;
+    switch (key) {
+      case 'errorNotFound':
+        return localizations.errorNotFound;
+      case 'errorInternalServer':
+        return localizations.errorInternalServer;
+      case 'errorNoInternet':
+        return localizations.errorNoInternet;
+      default:
+        return localizations.errorGeneral;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +42,9 @@ class DetailPage extends StatelessWidget {
             final state = provider.state;
             return switch (state) {
               ApiLoading() => const Center(child: CircularProgressIndicator()),
-              ApiError(:final message) => Center(child: Text(message)),
+              ApiError(:final message) => Center(
+                child: Text(_getTranslatedErrorMessage(context, message)),
+              ),
               ApiSuccess(:final data) => _buildDetailContent(context, data),
             };
           },
